@@ -1,0 +1,111 @@
+joins==>
+******** inner join*****
+SELECT Orders.OrderID, Customers.Name, Orders.OrderDate, Orders.OrderTotal
+FROM Orders
+INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID;
+
+******outer join*****
+
+SELECT Customers.Name, Orders.OrderID, Orders.OrderDate, Orders.OrderTotal
+FROM Customers
+LEFT OUTER JOIN Orders ON Customers.CustomerID = Orders.CustomerID;
+
+****cross join*******
+SELECT Products.ProductID, Products.ProductName, Customers.CustomerID, Customers.CustomerName
+FROM Products
+CROSS JOIN Customers;
+
+****having******
+SELECT Employees.LastName, COUNT(Orders.OrderID) AS NumberOfOrders
+FROM (Orders
+INNER JOIN Employees ON Orders.EmployeeID = Employees.EmployeeID)
+GROUP BY LastName
+HAVING COUNT(Orders.OrderID) > 10;
+
+
+***index****
+CREATE INDEX index_lastname
+ON Persons (LastName,id);
+
+****foreign key****
+
+CREATE TABLE Orders (
+    OrderID int NOT NULL,
+    OrderNumber int NOT NULL,
+    PersonID int,
+    PRIMARY KEY (OrderID),
+    FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
+);
+
+*****default****
+
+CREATE TABLE students (
+  id INT PRIMARY KEY,
+  name VARCHAR(50),
+  age INT DEFAULT 18,
+  enrollment_date DATE DEFAULT '2023-01-01'
+);
+
+****procedures*****
+ delimiter //
+create procedure p1
+begin
+
+selct * from employee;
+
+end
+//
+
+////trigger//////
+
+create trigger log_insertion 
+after insert on employees 
+fro each row 
+begin
+
+INSERT INTO audit_log (event_type, event_date, event_description)
+    VALUES ('INSERT', CURRENT_TIMESTAMP, 'New employee added');
+end;
+********
+
+
+
+
+**************************
+
+//****stored procedures****///
+
+delimiter //
+create procedure package(nthrank int)
+begin
+
+
+select * from Orders order by amount desc  limit nthrank;
+end
+//
+
+call package(20);
+
+
+****views*******
+
+
+CREATE VIEW hr_employees AS
+SELECT id, name, salary
+FROM employees
+WHERE department = 'HR';
+
+
+select * from hr_employees ;
+*****
+
+
+---create table Book(id int primarykey, title varchar(20), author varchar(20))
+
+/*insert into Book(id,title,author)
+	values(1,'souls','ankit'),
+    	(2,'hellbound','koushik'),
+        (3,'kings','messaigh')*/
+--  create table inventoryTable(bookid int,borrowed_id int,borrowed boolean) 
+
+

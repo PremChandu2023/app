@@ -1,0 +1,67 @@
+create table books(title int , author varchar(20), publication_date DATE, rating decimal(10,2), rental_rate double, availability_status varchar(20)
+
+CREATE TABLE borrowers (
+  borrower_id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100),
+  email VARCHAR(100),
+  phone_number VARCHAR(20)
+);
+
+CREATE TABLE borrowed_books (
+  borrowed_id INT PRIMARY KEY AUTO_INCREMENT,
+  book_id INT,
+  borrower_id INT,
+  borrow_date DATE,
+  return_date DATE,
+  FOREIGN KEY (book_id) REFERENCES books (book_id),
+  FOREIGN KEY (borrower_id) REFERENCES borrowers (borrower_id)
+);
+
+
+
+INSERT INTO books (title, author, publication_date, rating, rental_rate, availability_status)
+VALUES ('Book Title', 'Author Name', '2023-06-21', 4.5, 10.99, 'available');
+sarch book
+
+
+SELECT *
+FROM books
+WHERE title LIKE '%search_term%' OR author LIKE '%search_term%';
+
+SELECT *
+FROM books
+WHERE title LIKE '%Harry Potter%';
+
+
+SELECT books.book_id, books.title, books.author, inventory.quantity
+FROM books
+JOIN inventory ON books.book_id = inventory.book_id;
+
+DELETE FROM books
+WHERE book_id = 1;
+
+SELECT books.book_id, books.title, books.author, inventory.quantity
+FROM books
+JOIN inventory ON books.book_id = inventory.book_id
+ORDER BY books.author;
+
+
+UPDATE books
+SET rating = 4.5
+WHERE book_id = 1;
+
+DELIMITER //
+
+CREATE TRIGGER UpdateInventoryAfterBorrow
+AFTER INSERT ON borrowed_books
+FOR EACH ROW
+BEGIN
+  UPDATE inventory
+  SET quantity = quantity - 1
+  WHERE book_id = NEW.book_id;
+END //
+
+DELIMITER ;
+
+
+
